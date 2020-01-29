@@ -12,7 +12,8 @@ CALL = 0x50  # Call subroutine at address stored in register
 RET = 0x11   # Return from a subroutine
 CMP = 0xA7   # Compare the values in two registers
 JMP = 0x54   # Jump to the address stored in the given register.
-print((JMP >> 6) + 1)
+JEQ = 0x55   # If equal flag is true, jump to address stored in the given register
+JNE = 0x56   # If E flag is false, jump to address stored in the given register
 
 
 class CPU:
@@ -36,6 +37,9 @@ class CPU:
             CALL: self.call,
             RET: self.ret,
             CMP: self.cmp,
+            JMP: self.jmp,
+            JEQ: self.jeq,
+            JNE: self.jne,
             'ALU': {
                 ADD: self.alu,
                 MUL: self.alu
@@ -133,7 +137,15 @@ class CPU:
             self.fl = 0x03
 
     def jmp(self, a, *args):
-        self.pc = reg[a] - 2S
+        self.pc = self.reg[a] - 2
+
+    def jeq(self, a, *args):
+        if self.fl == 0x01:
+            self.pc = self.reg[a] - 2
+
+    def jne(self, a, *args):
+        if f'{self.fl:b}'[-1] != 1:
+            self.pc = self.reg[a] - 2
 
     def trace(self):
         """
