@@ -129,9 +129,9 @@ class CPU:
         self.pc = self.ram[self.sp] + 1
 
     def cmp(self, a, b):
-        if a == b:
+        if self.reg[a] == self.reg[b]:
             self.fl = 0x01
-        elif a < b:
+        elif self.reg[a] > self.reg[b]:
             self.fl = 0x02
         else:
             self.fl = 0x03
@@ -140,11 +140,11 @@ class CPU:
         self.pc = self.reg[a] - 2
 
     def jeq(self, a, *args):
-        if self.fl == 0x01:
+        if f'{self.fl:x}' == f'{0x01}':
             self.pc = self.reg[a] - 2
 
     def jne(self, a, *args):
-        if f'{self.fl:b}'[-1] != 1:
+        if f'{self.fl:x}' != f'{0x01}':
             self.pc = self.reg[a] - 2
 
     def trace(self):
