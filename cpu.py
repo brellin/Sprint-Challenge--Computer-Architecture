@@ -11,6 +11,8 @@ PUSH = 0x45  # Push value in given register on stack
 CALL = 0x50  # Call subroutine at address stored in register
 RET = 0x11   # Return from a subroutine
 CMP = 0xA7   # Compare the values in two registers
+JMP = 0x54   # Jump to the address stored in the given register.
+print((JMP >> 6) + 1)
 
 
 class CPU:
@@ -129,6 +131,9 @@ class CPU:
             self.fl = 0x02
         else:
             self.fl = 0x03
+
+    def jmp(self, a, *args):
+        self.pc = reg[a] - 2S
 
     def trace(self):
         """
