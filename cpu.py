@@ -14,6 +14,13 @@ CMP = 0xA7   # Compare the values in two registers
 JMP = 0x54   # Jump to the address stored in the given register.
 JEQ = 0x55   # If equal flag is true, jump to address stored in the given register
 JNE = 0x56   # If E flag is false, jump to address stored in the given register
+AND = 0xA8   # AND registerA and registerB, store  result in registerA
+OR = 0x69    # OR registerA and registerB, store  result in registerA
+XOR = 0xAB   # XOR registerA and registerB, store  result in registerA
+NOT = 0x69   # NOT in given register
+SHL = 0xAC   # Shift registerA left by bits in registerB, filling the low bits with 0
+SHR = 0xAD   # Shift registerA right by bits in registerB, filling the high bits with 0
+MOD = 0xA4   # Divide first register by second, store >>remainder<< of the result in registerA
 
 
 class CPU:
@@ -42,7 +49,14 @@ class CPU:
             JNE: self.jne,
             'ALU': {
                 ADD: self.alu,
-                MUL: self.alu
+                MUL: self.alu,
+                AND: self.alu,
+                OR: self.alu,
+                XOR: self.alu,
+                NOT: self.alu,
+                SHL: self.alu,
+                SHR: self.alu,
+                MOD: self.alu
             }
         }
 
@@ -85,6 +99,20 @@ class CPU:
             self.reg[reg_a] += self.reg[reg_b]
         elif op == MUL:
             self.reg[reg_a] *= self.reg[reg_b]
+        elif op == AND:
+            self.reg[reg_a] = (self.reg[reg_a] & self.reg[reg_b])
+        elif op == OR:
+            self.reg[reg_a] = (self.reg[reg_a] | self.reg[reg_b])
+        elif op == XOR:
+            self.reg[reg_a] = (self.reg[reg_a] ^ self.reg[reg_b])
+        elif op == NOT:
+            self.reg[reg_a] = (~ self.reg[reg_a])
+        elif op == SHL:
+            self.reg[reg_a] = (self.reg[reg_a] << self.reg[reg_b])
+        elif op == SHR:
+            self.reg[reg_a] = (self.reg[reg_a] >> self.reg[reg_b])
+        elif op == MOD:
+            self.reg[reg_a] = (self.reg[reg_a] % self.reg[reg_b])
         else:
             raise Exception("Unsupported ALU operation")
 
