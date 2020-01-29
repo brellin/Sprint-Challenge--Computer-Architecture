@@ -10,6 +10,7 @@ POP = 0x46   # Pop the value at the top of the stack into the given register
 PUSH = 0x45  # Push value in given register on stack
 CALL = 0x50  # Call subroutine at address stored in register
 RET = 0x11   # Return from a subroutine
+CMP = 0xA7   # Compare the values in two registers
 
 
 class CPU:
@@ -32,6 +33,7 @@ class CPU:
             PUSH: self.push,
             CALL: self.call,
             RET: self.ret,
+            CMP: self.cmp,
             'ALU': {
                 ADD: self.alu,
                 MUL: self.alu
@@ -119,6 +121,14 @@ class CPU:
         """
         self.pop(self.mdr)
         self.pc = self.ram[self.sp] + 1
+
+    def cmp(self, a, b):
+        if a == b:
+            self.fl = 0x01
+        elif a < b:
+            self.fl = 0x02
+        else:
+            self.fl = 0x03
 
     def trace(self):
         """
